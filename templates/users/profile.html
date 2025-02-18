@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="profile-container">
+    <h2>Profile</h2>
+    <div class="profile-info">
+        <p>Username: {{ user.username }}</p>
+        <p>Email: {{ user.email }}</p>
+        <p>Account Type: {{ user.is_business|yesno:"Business,Regular User" }}</p>
+        <p>Debug: user.is_business = {{ user.is_business }}</p>
+        {% if user.is_business %}
+            <p>Business Profile: <a href="{% url 'businesses:business_profile' %}">View Business Profile</a></p>
+        
+            <p>Create B profile: <a href="{% url 'businesses:create_business_profile' %}">Create Business Profile</a></p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

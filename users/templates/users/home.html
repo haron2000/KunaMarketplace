@@ -1,0 +1,319 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <h1 class="hero-title">Discover Local Businesses</h1>
+        <p class="hero-subtitle">Connect with trusted local businesses and service providers in your area</p>
+        <div class="hero-cta">
+            <a href="{% url 'users:register' %}" class="cta-button primary">Get Started</a>
+            <a href="{% url 'businesses:list' %}" class="cta-button secondary">Explore Businesses</a>
+        </div>
+    </div>
+    <div class="hero-images">
+        <div class="featured-image"></div>
+        <div class="shape-1"></div>
+        <div class="shape-2"></div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features">
+    <h2 class="section-title">Why Choose Us</h2>
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">🔍</div>
+            <h3>Easy Discovery</h3>
+            <p>Find the perfect local businesses that match your needs</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">💬</div>
+            <h3>Direct Communication</h3>
+            <p>Chat directly with business owners and service providers</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">⭐</div>
+            <h3>Verified Reviews</h3>
+            <p>Make informed decisions with genuine customer reviews</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🤝</div>
+            <h3>Secure Transactions</h3>
+            <p>Safe and reliable payment processing for all services</p>
+        </div>
+    </div>
+</section>
+
+<!-- Popular Categories -->
+<section class="categories">
+    <h2 class="section-title">Popular Categories</h2>
+    <div class="categories-grid">
+        {% for category in categories|slice:":6" %}
+        <a href="#" class="category-card">
+            <div class="category-icon">{{ category.icon|default:"🏢" }}</div>
+            <h3>{{ category.name }}</h3>
+            <p>{{ category.business_count }} businesses</p>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="cta-section">
+    <div class="cta-content">
+        <h2>Ready to Grow Your Business?</h2>
+        <p>Join thousands of successful businesses on our platform</p>
+        <a href="{% url 'businesses:create_business_profile' %}" class="cta-button primary">List Your Business</a>
+    </div>
+</section>
+
+<style>
+    /* Reset and base styles */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    /* Hero Section */
+    .hero {
+        display: flex;
+        min-height: 80vh;
+        padding: 4rem 8%;
+        background: linear-gradient(135deg, #f6f9fc 0%, #ffffff 100%);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-content {
+        flex: 1;
+        max-width: 600px;
+        z-index: 2;
+    }
+
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        color: #1a202c;
+        margin-bottom: 1.5rem;
+        line-height: 1.2;
+    }
+
+    .hero-subtitle {
+        font-size: 1.25rem;
+        color: #4a5568;
+        margin-bottom: 2rem;
+        line-height: 1.6;
+    }
+
+    .hero-images {
+        flex: 1;
+        position: relative;
+    }
+
+    .featured-image {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: url('{% static "images/hero-image.jpg" %}') center/cover;
+        border-radius: 2rem;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .shape-1, .shape-2 {
+        position: absolute;
+        border-radius: 50%;
+    }
+
+    .shape-1 {
+        width: 300px;
+        height: 300px;
+        background: rgba(66, 153, 225, 0.1);
+        top: -50px;
+        right: -100px;
+    }
+
+    .shape-2 {
+        width: 200px;
+        height: 200px;
+        background: rgba(237, 100, 166, 0.1);
+        bottom: -50px;
+        left: -50px;
+    }
+
+    /* Features Section */
+    .features {
+        padding: 6rem 8%;
+        background: #ffffff;
+    }
+
+    .section-title {
+        text-align: center;
+        font-size: 2.5rem;
+        color: #1a202c;
+        margin-bottom: 3rem;
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+    }
+
+    .feature-card {
+        padding: 2rem;
+        background: #f7fafc;
+        border-radius: 1rem;
+        text-align: center;
+        transition: transform 0.3s ease;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .feature-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .feature-card h3 {
+        font-size: 1.25rem;
+        color: #2d3748;
+        margin-bottom: 0.5rem;
+    }
+
+    .feature-card p {
+        color: #718096;
+    }
+
+    /* Categories Section */
+    .categories {
+        padding: 6rem 8%;
+        background: #f7fafc;
+    }
+
+    .categories-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+    }
+
+    .category-card {
+        padding: 2rem;
+        background: white;
+        border-radius: 1rem;
+        text-align: center;
+        text-decoration: none;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease;
+    }
+
+    .category-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .category-icon {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .category-card h3 {
+        color: #2d3748;
+        margin-bottom: 0.5rem;
+    }
+
+    .category-card p {
+        color: #718096;
+        font-size: 0.875rem;
+    }
+
+    /* CTA Section */
+    .cta-section {
+        padding: 6rem 8%;
+        background: linear-gradient(135deg, #4299e1 0%, #667eea 100%);
+        text-align: center;
+        color: white;
+    }
+
+    .cta-content h2 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .cta-content p {
+        font-size: 1.25rem;
+        margin-bottom: 2rem;
+        opacity: 0.9;
+    }
+
+    /* Buttons */
+    .cta-button {
+        display: inline-block;
+        padding: 1rem 2rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: transform 0.3s ease;
+    }
+
+    .cta-button:hover {
+        transform: translateY(-2px);
+    }
+
+    .primary {
+        background: #4299e1;
+        color: white;
+        margin-right: 1rem;
+    }
+
+    .secondary {
+        background: white;
+        color: #4299e1;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .hero {
+            flex-direction: column;
+            text-align: center;
+            padding: 2rem 5%;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+        }
+
+        .hero-images {
+            margin-top: 2rem;
+            min-height: 300px;
+        }
+
+        .features,
+        .categories,
+        .cta-section {
+            padding: 4rem 5%;
+        }
+
+        .section-title {
+            font-size: 2rem;
+        }
+
+        .hero-cta {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .cta-button {
+            margin: 0;
+            width: 100%;
+            max-width: 300px;
+            text-align: center;
+        }
+    }
+</style>
+{% endblock %}

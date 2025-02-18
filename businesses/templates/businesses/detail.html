@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>{{ business.name }}</h2>
+<p>Category: {{ business.category.name }}</p>
+<p>Location: {{ business.location }}</p>
+<p>Description: {{ business.description }}</p>
+<p>Phone: {{ business.phone }}</p>
+<a href="{% url 'businesses:list' %}">Back to Businesses</a>
+<a href="{% url 'chat:chat_room' chat_room.id %}">
+    Start Chat
+</a>
+
+{% endblock %}
