@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: kuna-marketplace
+    env: python
+    buildCommand: ""
+    startCommand: gunicorn KunaMarketplace.wsgi:application
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: KunaMarketplace.settings
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: False
