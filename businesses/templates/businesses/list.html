@@ -5,8 +5,15 @@
 
 {% block extra_css %}
 <style>
+  :root {
+    --primary-color: #FE3C72;
+    --secondary-color: #424242;
+    --background-color: #f5f7fa;
+  }
+
   body {
-    background: #f5f7fa;
+    background: var(--background-color);
+    font-family: 'Helvetica Neue', Arial, sans-serif;
   }
 
   .swipe-container {
@@ -29,7 +36,7 @@
     height: 75vh;
     background: white;
     border-radius: 1rem;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
     overflow: hidden;
     touch-action: pan-y pinch-zoom;
     transform-origin: 50% 100%;
@@ -42,47 +49,69 @@
 
   .business-card img {
     width: 100%;
-    height: 70%;
+    height: 75%;
     object-fit: cover;
   }
 
   .card-content {
-    padding: 1rem;
-    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    padding: 1.5rem;
+    background: white;
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    color: white;
+    color: var(--secondary-color);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
   }
 
   .card-content h3 {
     font-size: 1.75rem;
-    margin: 0 0 0.5rem 0;
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .business-age {
+    margin-left: 0.5rem;
+    font-size: 1.4rem;
+    color: var(--secondary-color);
   }
 
   .category-tag {
     display: inline-block;
-    background: rgba(255,255,255,0.2);
+    background: rgba(254, 60, 114, 0.1);
+    color: var(--primary-color);
     padding: 0.3rem 0.8rem;
     border-radius: 1rem;
     font-size: 0.9rem;
     margin-bottom: 0.5rem;
+    font-weight: 500;
   }
 
   .location {
     font-size: 1rem;
-    opacity: 0.9;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+  }
+
+  .location-icon {
+    margin-right: 0.5rem;
+    color: #9e9e9e;
   }
 
   .description {
-    font-size: 0.9rem;
-    opacity: 0.8;
+    font-size: 0.95rem;
+    color: #616161;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    line-height: 1.4;
   }
 
   .action-buttons {
@@ -92,41 +121,53 @@
     right: 0;
     display: flex;
     justify-content: center;
-    gap: 1rem;
+    gap: 1.5rem;
     padding: 0 1rem;
   }
 
   .action-btn {
-    width: 60px;
-    height: 60px;
+    width: 65px;
+    height: 65px;
     border-radius: 50%;
     border: none;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.5rem;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    font-size: 1.8rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s;
   }
 
   .action-btn:active {
     transform: scale(0.95);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   }
 
   .dislike-btn {
     background: white;
-    color: #fd267d;
+    color: #FE3C72;
+    font-size: 2.2rem;
   }
 
   .like-btn {
-    background: #fd267d;
+    background: linear-gradient(45deg, #FE3C72, #FF655B);
     color: white;
+    font-size: 2.2rem;
   }
 
   .info-btn {
     background: white;
     color: #2196f3;
+    width: 50px;
+    height: 50px;
+  }
+
+  .superlike-btn {
+    background: #2196f3;
+    color: white;
+    width: 50px;
+    height: 50px;
   }
 
   .empty-state {
@@ -140,6 +181,12 @@
     color: #666;
   }
 
+  .empty-state h3 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+    color: var(--primary-color);
+  }
+
   .swipe-overlay {
     position: absolute;
     top: 0;
@@ -149,45 +196,141 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2rem;
+    font-size: 3rem;
     font-weight: bold;
     opacity: 0;
     transition: opacity 0.3s;
+    z-index: 10;
   }
 
   .like-overlay {
-    background: rgba(0, 255, 0, 0.2);
-    color: #00e676;
+    background: rgba(0, 201, 167, 0.15);
+    color: #00C9A7;
+    border: 6px solid #00C9A7;
+    border-radius: 1rem;
   }
 
   .nope-overlay {
-    background: rgba(255, 0, 0, 0.2);
-    color: #ff1744;
+    background: rgba(254, 60, 114, 0.15);
+    color: #FE3C72;
+    border: 6px solid #FE3C72;
+    border-radius: 1rem;
+  }
+
+  .photo-count {
+    position: absolute;
+    top: 0.8rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 0.3rem;
+    z-index: 5;
+  }
+
+  .photo-indicator {
+    width: 40px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 2px;
+  }
+
+  .photo-indicator.active {
+    background: white;
+  }
+
+  .top-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    z-index: 100;
+  }
+
+  .tab-btn {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: #BDBDBD;
+    font-size: 1.5rem;
+  }
+
+  .tab-btn.active {
+    color: var(--primary-color);
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+
+  .like-animation {
+    animation: pulse 0.5s;
   }
 </style>
 {% endblock %}
 
 {% block content %}
+<div class="top-bar">
+  <button class="tab-btn">👤</button>
+  <button class="tab-btn active">🔍</button>
+  <button class="tab-btn">💬</button>
+  <button class="tab-btn">👑</button>
+</div>
+
 <div class="swipe-container">
   <div class="card-stack">
     {% for business in businesses %}
       <div class="business-card" data-id="{{ business.id }}">
         <div class="swipe-overlay like-overlay">LIKE</div>
         <div class="swipe-overlay nope-overlay">NOPE</div>
+        
+        <div class="photo-count">
+          <div class="photo-indicator active"></div>
+          {% if business.images.count > 1 %}
+            {% for i in "12345"|make_list %}
+              {% if forloop.counter < business.images.count %}
+                <div class="photo-indicator"></div>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        </div>
+        
         <img
           src="{% if business.images.first %}{{ business.images.first.image.url }}{% else %}{% static 'images/default-business.jpg' %}{% endif %}"
           alt="{{ business.name }}"
         />
         <div class="card-content">
+          <div class="card-header">
+            <h3>{{ business.name }}</h3>
+            <span class="business-age">
+              {% if business.year_established %}
+                {{ business.year_established|timesince|cut:" years, 0 months"|default:"New" }}
+              {% else %}
+                New
+              {% endif %}
+            </span>
+          </div>
           <span class="category-tag">{{ business.category.name }}</span>
-          <h3>{{ business.name }}</h3>
-          <p class="location">📍 {{ business.location }}</p>
+          <p class="location"><span class="location-icon">📍</span> {{ business.location }}</p>
           <p class="description">{{ business.description }}</p>
         </div>
       </div>
     {% empty %}
       <div class="empty-state">
         <h3>No More Businesses</h3>
+        <p>You've seen all businesses in your area.</p>
         <p>Check back later for new matches!</p>
       </div>
     {% endfor %}
@@ -195,7 +338,7 @@
   
   <div class="action-buttons">
     <button class="action-btn dislike-btn">✕</button>
-    <button class="action-btn info-btn">ℹ️</button>
+    <button class="action-btn superlike-btn">⭐</button>
     <button class="action-btn like-btn">♥</button>
   </div>
 </div>
@@ -205,16 +348,27 @@ document.addEventListener('DOMContentLoaded', function() {
   const cards = document.querySelectorAll('.business-card');
   let currentCardIndex = cards.length - 1;
   
+  // Set up initial card positions (slightly stacked)
   cards.forEach((card, index) => {
-    card.style.zIndex = index;
-    
+    const offset = (cards.length - 1 - index) * 4;
+    card.style.zIndex = 1000 - index;
+    if (index < cards.length - 1) {
+      card.style.transform = `translateY(${offset}px) scale(${1 - 0.02 * offset})`;
+      card.style.opacity = 1 - 0.05 * offset;
+    }
+  });
+  
+  cards.forEach((card, index) => {
     let isDragging = false;
     let startX = 0;
     let startY = 0;
     let offsetX = 0;
     let offsetY = 0;
+    let initialRotation = 0;
     
     function handleStart(e) {
+      if (index !== currentCardIndex) return;
+      
       isDragging = true;
       startX = e.type === 'mousedown' ? e.clientX : e.touches[0].clientX;
       startY = e.type === 'mousedown' ? e.clientY : e.touches[0].clientY;
@@ -222,6 +376,11 @@ document.addEventListener('DOMContentLoaded', function() {
       const rect = card.getBoundingClientRect();
       offsetX = startX - rect.left;
       offsetY = startY - rect.top;
+      
+      // Random initial rotation between -5 and 5 degrees
+      initialRotation = Math.random() * 10 - 5;
+      
+      e.preventDefault();
     }
     
     function handleMove(e) {
@@ -233,7 +392,8 @@ document.addEventListener('DOMContentLoaded', function() {
       const deltaX = currentX - startX;
       const deltaY = currentY - startY;
       
-      const rotate = deltaX * 0.1;
+      // Calculate rotation based on horizontal movement
+      const rotate = initialRotation + deltaX * 0.1;
       
       card.style.transform = `translate(${deltaX}px, ${deltaY}px) rotate(${rotate}deg)`;
       
@@ -258,16 +418,23 @@ document.addEventListener('DOMContentLoaded', function() {
       isDragging = false;
       
       const rect = card.getBoundingClientRect();
-      const threshold = window.innerWidth * 0.4;
+      const threshold = window.innerWidth * 0.3;
       
       if (rect.x > threshold) {
         animateOut(card, 1);
       } else if (rect.x < -threshold) {
         animateOut(card, -1);
       } else {
+        // Return to center with a spring effect
+        card.style.transition = 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
         card.style.transform = '';
         card.querySelector('.like-overlay').style.opacity = 0;
         card.querySelector('.nope-overlay').style.opacity = 0;
+        
+        // Remove transition after animation completes
+        setTimeout(() => {
+          card.style.transition = '';
+        }, 500);
       }
     }
     
@@ -282,6 +449,9 @@ document.addEventListener('DOMContentLoaded', function() {
   // Button handlers
   document.querySelector('.like-btn').addEventListener('click', () => {
     if (currentCardIndex >= 0) {
+      const likeBtn = document.querySelector('.like-btn');
+      likeBtn.classList.add('like-animation');
+      setTimeout(() => likeBtn.classList.remove('like-animation'), 500);
       animateOut(cards[currentCardIndex], 1);
     }
   });
@@ -292,23 +462,80 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   
-  document.querySelector('.info-btn').addEventListener('click', () => {
+  document.querySelector('.superlike-btn').addEventListener('click', () => {
     if (currentCardIndex >= 0) {
       const businessId = cards[currentCardIndex].dataset.id;
-      window.location.href = `/businesses/${businessId}/`;
+      animateOutUp(cards[currentCardIndex]);
     }
   });
   
   function animateOut(card, direction) {
     const endX = window.innerWidth * direction * 1.5;
     card.style.transition = 'transform 0.5s ease-out';
-    card.style.transform = `translate(${endX}px, ${window.innerHeight * 0.3}px) rotate(${90 * direction}deg)`;
+    card.style.transform = `translate(${endX}px, ${window.innerHeight * 0.1}px) rotate(${45 * direction}deg)`;
+    
+    if (direction > 0) {
+      card.querySelector('.like-overlay').style.opacity = 1;
+    } else {
+      card.querySelector('.nope-overlay').style.opacity = 1;
+    }
     
     setTimeout(() => {
       card.remove();
       currentCardIndex--;
+      updateNextCards();
     }, 500);
   }
+  
+  function animateOutUp(card) {
+    card.style.transition = 'transform 0.5s ease-out, opacity 0.5s ease-out';
+    card.style.transform = `translateY(-${window.innerHeight}px) scale(0.8)`;
+    card.style.opacity = 0;
+    
+    setTimeout(() => {
+      card.remove();
+      currentCardIndex--;
+      updateNextCards();
+    }, 500);
+  }
+  
+  function updateNextCards() {
+    // Move next cards forward
+    const remainingCards = document.querySelectorAll('.business-card');
+    remainingCards.forEach((card, index) => {
+      const isTopCard = index === currentCardIndex;
+      if (isTopCard) {
+        card.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
+        card.style.transform = '';
+        card.style.opacity = 1;
+        setTimeout(() => {
+          card.style.transition = '';
+        }, 300);
+      }
+    });
+  }
+  
+  // Add simple photo indicator functionality (simulated)
+  const cards = document.querySelectorAll('.business-card');
+  cards.forEach(card => {
+    const indicators = card.querySelectorAll('.photo-indicator');
+    
+    if (indicators.length > 1) {
+      card.addEventListener('click', (e) => {
+        // Only handle clicks on the image part
+        const rect = card.getBoundingClientRect();
+        const y = e.clientY - rect.top;
+        
+        if (y < rect.height * 0.7) {
+          const activeIndex = Array.from(indicators).findIndex(i => i.classList.contains('active'));
+          const nextIndex = (activeIndex + 1) % indicators.length;
+          
+          indicators.forEach(i => i.classList.remove('active'));
+          indicators[nextIndex].classList.add('active');
+        }
+      });
+    }
+  });
 });
 </script>
 {% endblock %}
