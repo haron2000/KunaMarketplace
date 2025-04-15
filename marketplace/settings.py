@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-z&(@&%o5**@fiuwbsnld=^7lmby8ezr6x@6cjo9tb73x_dn@86
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['kunamarketplace-7.onrender.com', 'www.kunamarketplace-7.onrender.com']
 
 
 # Application definition
